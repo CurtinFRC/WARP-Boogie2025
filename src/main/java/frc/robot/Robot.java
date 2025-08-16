@@ -26,6 +26,10 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.DriveCommands;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.ArmIO;
+import frc.robot.subsystems.arm.ArmIOComp;
+import frc.robot.subsystems.arm.ArmIOSim;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -50,7 +54,7 @@ public class Robot extends LoggedRobot {
 
   // Subsystems
   private final Drive drive;
-  // private final Arm arm;
+  private final Arm arm;
   // private final Climber climber;
 
   // Controller
@@ -112,6 +116,7 @@ public class Robot extends LoggedRobot {
                 new ModuleIOTalonFX(TunerConstants.FrontRight),
                 new ModuleIOTalonFX(TunerConstants.BackLeft),
                 new ModuleIOTalonFX(TunerConstants.BackRight));
+        arm = new Arm(new ArmIOComp() {});
         break;
 
       case SIM:
@@ -123,6 +128,7 @@ public class Robot extends LoggedRobot {
                 new ModuleIOSim(TunerConstants.FrontRight),
                 new ModuleIOSim(TunerConstants.BackLeft),
                 new ModuleIOSim(TunerConstants.BackRight));
+        arm = new Arm(new ArmIOSim());
         break;
 
       default:
@@ -134,6 +140,7 @@ public class Robot extends LoggedRobot {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {});
+        arm = new Arm(new ArmIO() {});
         break;
     }
 
@@ -143,6 +150,8 @@ public class Robot extends LoggedRobot {
             () -> -controller.getLeftY(),
             () -> -controller.getLeftX(),
             () -> -controller.getRightX()));
+
+    arm.setDefaultCommand(arm.stop());
 
     // Reset gyro to 0° when B button is pressed
     controller
@@ -154,6 +163,9 @@ public class Robot extends LoggedRobot {
                             new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
                     drive)
                 .ignoringDisable(true));
+
+    controller.a().whileTrue(arm.intakeRaw(8.0));
+    controller.x().whileTrue(arm.pivotRaw(4.0));
 
     // Check for valid swerve config
     var modules =
