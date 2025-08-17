@@ -6,12 +6,13 @@ public class ArmConstants {
   public static final double intakeGearing =
       1.0 / 1.0; // TODO: work out what the gearing actually is
 
-  public static final double pivotStowPositionRotations = 0.5; // TODO: find actual position
-  public static final double pivotOutPositionRotations = 0.7; // TODO: find actual position
+  public static final double pivotStowPositionRotations = 5; // TODO: find actual position
+  public static final double pivotIntakePositionRotations = 19; // TODO: find actual position
+  public static final double pivotEjectPositionRotations = 16; // TODO: find actual position
   public static final double pivotStartPositionRotations = 0.0; // TODO: find actual position
   public static final double intakeTargerSpeedRPM = 100.0; // TODO: find actual speed
 
-  public static final double pivotKp = 0.01; // TODO: find actual value]
+  public static final double pivotKp = 0.5; // TODO: find actual value]
   public static final double pivotKi = 0.0; // TODO: find actual value
   public static final double pivotKd = 0.0; // TODO: find actual value
   public static final double pivotToleranceRotations = 0.05; // TODO: find actual value
@@ -23,7 +24,8 @@ public class ArmConstants {
 
   public enum ArmState {
     STOWED,
-    OUT,
+    INTAKE,
+    EJECT,
     START,
   }
 }

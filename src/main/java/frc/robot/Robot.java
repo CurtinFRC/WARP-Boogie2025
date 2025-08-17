@@ -27,16 +27,10 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.DriveCommands;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.arm.Arm;
-import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmIO;
 import frc.robot.subsystems.arm.ArmIOComp;
 import frc.robot.subsystems.arm.ArmIOSim;
-import frc.robot.subsystems.drive.Drive;
-import frc.robot.subsystems.drive.GyroIO;
-import frc.robot.subsystems.drive.GyroIOPigeon2;
-import frc.robot.subsystems.drive.ModuleIO;
-import frc.robot.subsystems.drive.ModuleIOSim;
-import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import frc.robot.subsystems.drive.*;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -152,7 +146,7 @@ public class Robot extends LoggedRobot {
             () -> -controller.getLeftX(),
             () -> -controller.getRightX()));
 
-    arm.setDefaultCommand(arm.stop());
+    arm.setDefaultCommand(arm.hold());
 
     // Reset gyro to 0° when B button is pressed
     controller
@@ -165,9 +159,11 @@ public class Robot extends LoggedRobot {
                     drive)
                 .ignoringDisable(true));
 
-    // controller.a().whileTrue(arm.intakeRaw(8.0));
-    // controller.x().whileTrue(arm.pivotRaw(4.0));
-    controller.a().whileTrue(arm.pivotToSetpoint(ArmConstants.ArmState.STOWED));
+    controller.rightBumper().whileTrue(arm.intake());
+
+    controller
+        .leftBumper()
+        .whileTrue(arm.ejectPrep().until(controller.leftTrigger()).andThen(arm.eject()));
 
     // Check for valid swerve config
     var modules =

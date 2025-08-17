@@ -7,17 +7,18 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import edu.wpi.first.math.MathUtil;
 import frc.robot.util.SparkUtil;
 
 public class ArmIOComp implements ArmIO {
-  private final SparkMax pivotMotor = new SparkMax(9, MotorType.kBrushless);
+  private final SparkMax pivotMotor = new SparkMax(4, MotorType.kBrushless);
   private final RelativeEncoder pivotEncoder = pivotMotor.getEncoder();
-  private final SparkMax intakeMotor = new SparkMax(10, MotorType.kBrushless);
+  private final SparkMax intakeMotor = new SparkMax(3, MotorType.kBrushless);
   private final RelativeEncoder intakeEncoder = intakeMotor.getEncoder();
 
   public ArmIOComp() {
     SparkMaxConfig config = new SparkMaxConfig();
-    config.smartCurrentLimit(0, 60).idleMode(IdleMode.kBrake).inverted(false);
+    config.smartCurrentLimit(0, 60).idleMode(IdleMode.kBrake).inverted(false).openLoopRampRate(1.0);
 
     SparkUtil.tryUntilOk(
         5,
@@ -47,11 +48,13 @@ public class ArmIOComp implements ArmIO {
 
   @Override
   public void setPivotVoltage(double voltage) {
-    pivotMotor.setVoltage(voltage);
+    final double pivotVoltage = MathUtil.clamp(voltage, -4.0, 4.0);
+    pivotMotor.setVoltage(pivotVoltage);
   }
 
   @Override
   public void setIntakeVoltage(double voltage) {
-    intakeMotor.setVoltage(voltage);
+    final double intakeVoltage = MathUtil.clamp(voltage, -12.0, 12.0);
+    intakeMotor.setVoltage(intakeVoltage);
   }
 }

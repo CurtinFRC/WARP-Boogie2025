@@ -27,27 +27,27 @@ public class Arm extends SubsystemBase {
     Logger.processInputs("Arm", inputs);
   }
 
-  public Command pivotToSetpoint(ArmState state) {
-    return run(() -> {
-          double out =
-              pivotController.calculate(
-                  inputs.pivotPositionRotations,
-                  (switch (state) {
-                    case STOWED:
-                      yield ArmConstants.pivotStowPositionRotations;
-                    case OUT:
-                      yield ArmConstants.pivotOutPositionRotations;
-                    case START:
-                      yield ArmConstants.pivotStartPositionRotations;
-                  }));
-          Logger.recordOutput("Arm/pivotAppliedVoltage", out);
-          Logger.recordOutput("Arm/pivotError", pivotController.getError());
-          Logger.recordOutput("Pivot/TargetState", state.name());
-          Logger.recordOutput("Arm/PivotAtSetpoint", pivotController.atSetpoint());
-          io.setPivotVoltage(out);
-        })
-        .until(pivotController::atSetpoint);
+  public void pivotToSetpoint(ArmState state) {
+    double out =
+        pivotController.calculate(
+            inputs.pivotPositionRotations,
+            (switch (state) {
+              case STOWED:
+                yield ArmConstants.pivotStowPositionRotations;
+              case INTAKE:
+                yield ArmConstants.pivotIntakePositionRotations;
+              case START:
+                yield ArmConstants.pivotStartPositionRotations;
+              case EJECT:
+                yield ArmConstants.pivotEjectPositionRotations;
+            }));
+    Logger.recordOutput("Arm/pivotAppliedVoltage", out);
+    Logger.recordOutput("Arm/pivotError", pivotController.getError());
+    Logger.recordOutput("Pivot/TargetState", state.name());
+    Logger.recordOutput("Arm/PivotAtSetpoint", pivotController.atSetpoint());
+    io.setPivotVoltage(out);
   }
+  ;
 
   // public Command intakeToSpeed(double adjustment) {
   //   return run(
@@ -61,8 +61,40 @@ public class Arm extends SubsystemBase {
   //   )
   // }
 
-  public Command intakeRaw(double voltage) {
-    return run(() -> io.setIntakeVoltage(voltage));
+  public Command intake() {
+    return run(
+        () -> {
+          pivotToSetpoint(ArmState.INTAKE);
+          intakeRaw(-12);
+        });
+  }
+
+  public Command hold() {
+    return run(
+        () -> {
+          pivotToSetpoint(ArmState.STOWED);
+          intakeRaw(-0.5);
+        });
+  }
+
+  public Command ejectPrep() {
+    return run(
+        () -> {
+          pivotToSetpoint(ArmState.EJECT);
+          intakeRaw(0);
+        });
+  }
+
+  public Command eject() {
+    return run(
+        () -> {
+          pivotToSetpoint(ArmState.EJECT);
+          intakeRaw(12);
+        });
+  }
+
+  public void intakeRaw(double voltage) {
+    io.setIntakeVoltage(voltage);
   }
 
   public Command pivotRaw(double voltage) {
