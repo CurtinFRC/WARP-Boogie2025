@@ -16,6 +16,7 @@ package frc.robot;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.DriveMotorArrangement;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.SteerMotorArrangement;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Alert;
@@ -26,12 +27,11 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.DriveCommands;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.drive.Drive;
-import frc.robot.subsystems.drive.GyroIO;
-import frc.robot.subsystems.drive.GyroIOPigeon2;
-import frc.robot.subsystems.drive.ModuleIO;
-import frc.robot.subsystems.drive.ModuleIOSim;
-import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.ArmIO;
+import frc.robot.subsystems.arm.ArmIOComp;
+import frc.robot.subsystems.arm.ArmIOSim;
+import frc.robot.subsystems.drive.*;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -50,7 +50,7 @@ public class Robot extends LoggedRobot {
 
   // Subsystems
   private final Drive drive;
-  // private final Arm arm;
+  private final Arm arm;
   // private final Climber climber;
 
   // Controller
@@ -112,6 +112,7 @@ public class Robot extends LoggedRobot {
                 new ModuleIOTalonFX(TunerConstants.FrontRight),
                 new ModuleIOTalonFX(TunerConstants.BackLeft),
                 new ModuleIOTalonFX(TunerConstants.BackRight));
+        arm = new Arm(new ArmIOComp() {});
         break;
 
       case SIM:
@@ -123,6 +124,7 @@ public class Robot extends LoggedRobot {
                 new ModuleIOSim(TunerConstants.FrontRight),
                 new ModuleIOSim(TunerConstants.BackLeft),
                 new ModuleIOSim(TunerConstants.BackRight));
+        arm = new Arm(new ArmIOSim());
         break;
 
       default:
@@ -134,6 +136,7 @@ public class Robot extends LoggedRobot {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {});
+        arm = new Arm(new ArmIO() {});
         break;
     }
 
@@ -143,6 +146,8 @@ public class Robot extends LoggedRobot {
             () -> -controller.getLeftY(),
             () -> -controller.getLeftX(),
             () -> -controller.getRightX()));
+
+    arm.setDefaultCommand(arm.hold());
 
     // Reset gyro to 0° when B button is pressed
     controller
@@ -154,6 +159,13 @@ public class Robot extends LoggedRobot {
                             new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
                     drive)
                 .ignoringDisable(true));
+
+    controller.rightBumper().whileTrue(arm.intake());
+    controller.rightTrigger().whileTrue(arm.lollipopIntake());
+
+    controller
+        .leftBumper()
+        .whileTrue(arm.ejectPrep().until(controller.leftTrigger()).andThen(arm.eject()));
 
     // Check for valid swerve config
     var modules =
@@ -170,6 +182,8 @@ public class Robot extends LoggedRobot {
             "You are using an unsupported swerve configuration, which this template does not support without manual customization. The 2025 release of Phoenix supports some swerve configurations which were not available during 2025 beta testing, preventing any development and support from the AdvantageKit developers.");
       }
     }
+
+    autonomousCommand = new PathPlannerAuto("Taxi Auto");
   }
 
   /** This function is called periodically during all modes. */
@@ -200,7 +214,9 @@ public class Robot extends LoggedRobot {
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
-  public void autonomousInit() {}
+  public void autonomousInit() {
+    autonomousCommand.schedule();
+  }
 
   /** This function is called periodically during autonomous. */
   @Override
