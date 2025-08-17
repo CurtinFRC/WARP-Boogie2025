@@ -9,8 +9,8 @@ public class ArmConstants {
   public static final double pivotStowPositionRotations = 5; // TODO: find actual position
   public static final double pivotIntakePositionRotations = 19; // TODO: find actual position
   public static final double pivotEjectPositionRotations = 16; // TODO: find actual position
-  public static final double pivotStartPositionRotations = 0.0; // TODO: find actual position
-  public static final double intakeTargerSpeedRPM = 100.0; // TODO: find actual speed
+  public static final double pivotStartPositionRotations = 0.0; // TODO: find actual
+  public static final double pivotLollipopIntakePositionRotations = 14.2; // TODO: find actual
 
   public static final double pivotKp = 0.5; // TODO: find actual value]
   public static final double pivotKi = 0.0; // TODO: find actual value
@@ -27,5 +27,6 @@ public class ArmConstants {
     INTAKE,
     EJECT,
     START,
+    LOLLIPOP_INTAKE,
   }
 }

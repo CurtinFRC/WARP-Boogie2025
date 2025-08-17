@@ -16,6 +16,7 @@ package frc.robot;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.DriveMotorArrangement;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.SteerMotorArrangement;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Alert;
@@ -160,6 +161,7 @@ public class Robot extends LoggedRobot {
                 .ignoringDisable(true));
 
     controller.rightBumper().whileTrue(arm.intake());
+    controller.rightTrigger().whileTrue(arm.lollipopIntake());
 
     controller
         .leftBumper()
@@ -180,6 +182,8 @@ public class Robot extends LoggedRobot {
             "You are using an unsupported swerve configuration, which this template does not support without manual customization. The 2025 release of Phoenix supports some swerve configurations which were not available during 2025 beta testing, preventing any development and support from the AdvantageKit developers.");
       }
     }
+
+    autonomousCommand = new PathPlannerAuto("Taxi Auto");
   }
 
   /** This function is called periodically during all modes. */
@@ -210,7 +214,9 @@ public class Robot extends LoggedRobot {
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
-  public void autonomousInit() {}
+  public void autonomousInit() {
+    autonomousCommand.schedule();
+  }
 
   /** This function is called periodically during autonomous. */
   @Override
