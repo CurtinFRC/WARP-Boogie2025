@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.DriveCommands;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmIO;
 import frc.robot.subsystems.arm.ArmIOComp;
 import frc.robot.subsystems.arm.ArmIOSim;
@@ -164,8 +165,9 @@ public class Robot extends LoggedRobot {
                     drive)
                 .ignoringDisable(true));
 
-    controller.a().whileTrue(arm.intakeRaw(8.0));
-    controller.x().whileTrue(arm.pivotRaw(4.0));
+    // controller.a().whileTrue(arm.intakeRaw(8.0));
+    // controller.x().whileTrue(arm.pivotRaw(4.0));
+    controller.a().whileTrue(arm.pivotToSetpoint(ArmConstants.ArmState.STOWED));
 
     // Check for valid swerve config
     var modules =

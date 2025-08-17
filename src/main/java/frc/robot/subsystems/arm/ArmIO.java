@@ -21,4 +21,8 @@ public interface ArmIO {
   public default void setIntakeVoltage(double voltage) {}
 
   public default void setPivotVoltage(double voltage) {}
+
+  public default void pivotToPositionRotations(ArmConstants.ArmState state) {}
+
+  public default void intakeToSpeed(double speed) {}
 }
