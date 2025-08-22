@@ -160,8 +160,16 @@ public class Robot extends LoggedRobot {
                     drive)
                 .ignoringDisable(true));
 
-    controller.rightBumper().whileTrue(arm.intake());
-    controller.rightTrigger().onTrue(arm.resetArm());
+    controller
+        .rightBumper()
+        .whileTrue(
+            arm.intake()
+                .until(controller.rightTrigger())
+                .andThen(
+                    arm.pivotRaw(1)
+                        .until(controller.rightTrigger().negate())
+                        .andThen(arm.resetArm()))
+                .andThen(arm.intake()));
 
     controller
         .leftBumper()
@@ -183,7 +191,7 @@ public class Robot extends LoggedRobot {
       }
     }
 
-    autonomousCommand = new PathPlannerAuto("New Anti-4788 Auto");
+    autonomousCommand = new PathPlannerAuto("Sweep Auto");
   }
 
   /** This function is called periodically during all modes. */

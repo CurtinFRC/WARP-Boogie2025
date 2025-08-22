@@ -11,13 +11,10 @@ public class Arm extends SubsystemBase {
   private final ArmIOInputsAutoLogged inputs = new ArmIOInputsAutoLogged();
   private final PIDController pivotController =
       new PIDController(ArmConstants.pivotKp, ArmConstants.pivotKi, ArmConstants.pivotKd, 0.02);
-  private final PIDController intakeController =
-      new PIDController(ArmConstants.intakeKp, ArmConstants.intakeKi, ArmConstants.intakeKd, 0.02);
 
   public Arm(ArmIO io) {
     this.io = io;
     pivotController.setTolerance(ArmConstants.pivotToleranceRotations);
-    intakeController.setTolerance(ArmConstants.intakeToleranceRPM);
     setDefaultCommand(run(() -> stop()));
   }
 
@@ -73,7 +70,7 @@ public class Arm extends SubsystemBase {
     return run(
         () -> {
           pivotToSetpoint(ArmState.STOWED);
-          intakeRaw(-0.5);
+          intakeRaw(ArmConstants.intakeHoldVoltage);
         });
   }
 
@@ -113,7 +110,6 @@ public class Arm extends SubsystemBase {
     return run(
         () -> {
           io.resetArmEncoder();
-        }
-    );
+        });
   }
 }

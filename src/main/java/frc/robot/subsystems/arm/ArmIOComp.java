@@ -60,6 +60,6 @@ public class ArmIOComp implements ArmIO {
 
   @Override
   public void resetArmEncoder() {
-    pivotEncoder.setPosition(ArmConstants.pivotIntakePositionRotations);
+    pivotEncoder.setPosition(21);
   }
 }
