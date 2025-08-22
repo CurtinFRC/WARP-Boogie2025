@@ -183,7 +183,7 @@ public class Robot extends LoggedRobot {
       }
     }
 
-    autonomousCommand = new PathPlannerAuto("Taxi Auto");
+    autonomousCommand = new PathPlannerAuto("New Anti-4788 Auto");
   }
 
   /** This function is called periodically during all modes. */
