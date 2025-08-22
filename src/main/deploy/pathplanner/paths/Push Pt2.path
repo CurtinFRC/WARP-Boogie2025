@@ -1,0 +1,95 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 7.547371688741721,
+        "y": 2.288886589403974
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 4.220426324503311,
+        "y": 2.4632243377483447
+      },
+      "isLocked": false,
+      "linkedName": "push 1 end"
+    },
+    {
+      "anchor": {
+        "x": 7.547371688741721,
+        "y": 3.1460471854304632
+      },
+      "prevControl": {
+        "x": 6.348799668874172,
+        "y": 3.363969370860927
+      },
+      "nextControl": {
+        "x": 7.7933391662666995,
+        "y": 3.1013258258804672
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.213224337748344,
+        "y": 3.974151490066225
+      },
+      "prevControl": {
+        "x": 6.2471026490066235,
+        "y": 3.567363410596025
+      },
+      "nextControl": {
+        "x": 7.461754015845369,
+        "y": 4.078795565054446
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.847578642384105,
+        "y": 3.974151490066225
+      },
+      "prevControl": {
+        "x": 6.995302152317879,
+        "y": 3.9959437086092704
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1,
+      "rotationDegrees": 0.0
+    },
+    {
+      "waypointRelativePos": 2,
+      "rotationDegrees": 177.95459151111274
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -178.21008939175385
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "useDefaultConstraints": true
+}
