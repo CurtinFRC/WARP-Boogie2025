@@ -25,4 +25,6 @@ public interface ArmIO {
   public default void pivotToPositionRotations(ArmConstants.ArmState state) {}
 
   public default void intakeToSpeed(double speed) {}
+
+  public default void resetArmEncoder() {}
 }

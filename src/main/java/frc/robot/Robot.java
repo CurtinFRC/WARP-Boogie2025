@@ -161,7 +161,7 @@ public class Robot extends LoggedRobot {
                 .ignoringDisable(true));
 
     controller.rightBumper().whileTrue(arm.intake());
-    controller.rightTrigger().whileTrue(arm.lollipopIntake());
+    controller.rightTrigger().onTrue(arm.resetArm());
 
     controller
         .leftBumper()

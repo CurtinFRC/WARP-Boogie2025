@@ -52,4 +52,7 @@ public class ArmIOSim implements ArmIO {
     this.intakeVoltage = MathUtil.clamp(voltage, -12.0, 12.0);
     intakeMotorSim.setInputVoltage(voltage);
   }
+
+  @Override
+  public void resetArmEncoder() {} // No implementation cause gears don't skip in sim
 }

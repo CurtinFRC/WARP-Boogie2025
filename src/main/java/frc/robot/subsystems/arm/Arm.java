@@ -40,8 +40,6 @@ public class Arm extends SubsystemBase {
                 yield ArmConstants.pivotStartPositionRotations;
               case EJECT:
                 yield ArmConstants.pivotEjectPositionRotations;
-              case LOLLIPOP_INTAKE:
-                yield ArmConstants.pivotLollipopIntakePositionRotations;
             }));
     Logger.recordOutput("Arm/pivotAppliedVoltage", out);
     Logger.recordOutput("Arm/pivotError", pivotController.getError());
@@ -67,14 +65,6 @@ public class Arm extends SubsystemBase {
     return run(
         () -> {
           pivotToSetpoint(ArmState.INTAKE);
-          intakeRaw(-12);
-        });
-  }
-
-  public Command lollipopIntake() {
-    return run(
-        () -> {
-          pivotToSetpoint(ArmState.LOLLIPOP_INTAKE);
           intakeRaw(-12);
         });
   }
@@ -117,5 +107,13 @@ public class Arm extends SubsystemBase {
           io.setIntakeVoltage(0);
           io.setPivotVoltage(0);
         });
+  }
+
+  public Command resetArm() {
+    return run(
+        () -> {
+          io.resetArmEncoder();
+        }
+    );
   }
 }

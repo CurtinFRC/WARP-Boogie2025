@@ -57,4 +57,9 @@ public class ArmIOComp implements ArmIO {
     final double intakeVoltage = MathUtil.clamp(voltage, -12.0, 12.0);
     intakeMotor.setVoltage(intakeVoltage);
   }
+
+  @Override
+  public void resetArmEncoder() {
+    pivotEncoder.setPosition(ArmConstants.pivotIntakePositionRotations);
+  }
 }
